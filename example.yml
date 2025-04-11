@@ -1,0 +1,3 @@
+---
+example3: env var will take precedence
+example4: from config file
