@@ -1,4 +1,8 @@
-// Package simpleviper a convenience wrapper around [viper] to avoid repeated boilerplate code in my own projects when integrating [viper] with [cobra] or [github.com/bep/simplecobra] and [pflag].
+// Package simpleviper a convenience wrapper around [viper] to avoid repeated boilerplate code in my own projects when integrating [viper] with
+// [cobra] or [github.com/bep/simplecobra] and [pflag].
+//
+// The Viperlet type is a "baby" [*viper.Viper] in the sense it has a much narrower use case, however access to the underlying [*viper.Viper] is possible
+// however if this is required, it may be best to simply use the [viper] package directly.
 package simpleviper
 
 import (
