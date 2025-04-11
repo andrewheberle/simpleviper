@@ -1,5 +1,5 @@
 // Package simpleviper a convenience wrapper around [viper] to avoid repeated boilerplate code in my own projects when integrating [viper] with
-// [cobra] or [github.com/bep/simplecobra] and [pflag].
+// [github.com/spf13/cobra] or [github.com/bep/simplecobra] and [pflag].
 //
 // The Viperlet type is a "baby" [*viper.Viper] in the sense it has a much narrower use case, however access to the underlying [*viper.Viper] is possible
 // however if this is required, it may be best to simply use the [viper] package directly.
@@ -33,7 +33,7 @@ type Viperlet struct {
 	allowMissingConfig bool
 }
 
-// New returns an initialised Viperlet instance. The behaviour of the returned *Viperlet can be alted by passing various Option's.
+// New returns an initialised Viperlet instance. The behaviour of the returned [*Viperlet] can be alted by passing various [Option]'s.
 //
 // Creating a new Viperlet with no options is valid but it does not provide any specific features without manually using the underlying [*viper.Viper] instance via the Viper method.
 func New(opts ...Option) *Viperlet {
