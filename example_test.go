@@ -48,7 +48,7 @@ func ExampleViperlet_Init() {
 	// will override config file
 }
 
-func ExampleViperlet_Init_missingconfig() {
+func ExampleViperlet_Init_missingConfigFile() {
 	var exampleVar string
 
 	// create flagset, which in a real program (not an example) would use pflag.ExitOnError
@@ -67,7 +67,7 @@ func ExampleViperlet_Init_missingconfig() {
 	// Output: error: open missing.yml: The system cannot find the file specified.
 }
 
-func ExampleViperlet_Init_optionalconfig() {
+func ExampleViperlet_Init_optionalConfigFile() {
 	var exampleVar string
 
 	// create flagset, which in a real program (not an example) would use pflag.ExitOnError
