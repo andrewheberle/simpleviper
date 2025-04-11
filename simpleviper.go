@@ -1,5 +1,5 @@
 // Package simpleviper a convenience wrapper around [viper] to avoid repeated boilerplate code in my own projects when integrating [viper] with
-// [github.com/spf13/cobra] or [github.com/bep/simplecobra] and [pflag].
+// [cobra](github.com/spf13/cobra) or [simplecobra](github.com/bep/simplecobra) and [pflag].
 //
 // The Viperlet type is a "baby" [*viper.Viper] in the sense it has a much narrower use case, however access to the underlying [*viper.Viper] is possible
 // however if this is required, it may be best to simply use the [viper] package directly.
@@ -33,9 +33,13 @@ type Viperlet struct {
 	allowMissingConfig bool
 }
 
-// New returns an initialised Viperlet instance. The behaviour of the returned [*Viperlet] can be alted by passing various [Option]'s.
+// New returns an initialised [Viperlet] instance. The behaviour of the returned [*Viperlet] can be altered by passing various [Option]'s.
 //
-// Creating a new Viperlet with no options is valid but it does not provide any specific features without manually using the underlying [*viper.Viper] instance via the Viper method.
+// Creating a new Viperlet with no [Option]'s is valid but it does not provide any specific features without manually using the underlying
+// [*viper.Viper] instance via the [Viper] method.
+//
+// Please also keep in mind that passing incompatible or duplicated options, such as [WithConfig] and [WithOptionalConfig] together or
+// passing [WithEnvPrefix] multiple times will lead to unexpected results depending on the order the options are applied.
 func New(opts ...Option) *Viperlet {
 	v := new(Viperlet)
 
@@ -105,6 +109,7 @@ func (v *Viperlet) Init(flagset *pflag.FlagSet) error {
 	return nil
 }
 
+// The Option is used to pass options to [New].
 type Option func(*Viperlet)
 
 // WithViper allows passing your own [*viper.Viper] instance

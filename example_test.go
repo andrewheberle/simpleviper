@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
+// This example demonstrates values coming from the command line, defaults, environment variables and a configuration file.
 func ExampleViperlet_Init() {
 	var example1, example2, example3, example4, example5, example6 string
 
@@ -20,7 +21,7 @@ func ExampleViperlet_Init() {
 	fs.StringVar(&example5, "example5", "from default value", "Example flag 5")
 	fs.StringVar(&example6, "example6", "", "Example flag 6")
 
-	// as this is an example parse the command line flags
+	// as this is an example the command line options are provided
 	fs.Parse([]string{
 		"--example1", "from command line",
 		"--example6", "will override config file",
@@ -48,6 +49,7 @@ func ExampleViperlet_Init() {
 	// will override config file
 }
 
+// This example demonstrates attempting to load a config file that is missing and is treated as a fatal error.
 func ExampleViperlet_Init_missingConfigFile() {
 	var exampleVar string
 
@@ -68,6 +70,7 @@ func ExampleViperlet_Init_missingConfigFile() {
 	// Output: error: open missing.yml: The system cannot find the file specified.
 }
 
+// This example demonstrates specifying a config file that is optional, so that a missing file is not an error.
 func ExampleViperlet_Init_optionalConfigFile() {
 	var exampleVar string
 
