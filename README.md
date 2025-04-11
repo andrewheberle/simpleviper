@@ -7,7 +7,7 @@ This module is a convenience wrapper around [Viper](https://github.com/spf13/vip
 
 This provides a `Viperlet` type that is created using the `New` function, whch by using the `Init` method will bind a `*pflag.Flagset` to the underlying `*viper.Viper` instance, while also optionally loading a configuration file and retrieving values from the environment.
 
-The following example will allow the value of the `--stringflag` command line option to be set using the `STRINGFLAG` environment variable.
+The following example shows the integration with Simplecobra and allows the value of the `--stringflag` command line option to be set using the `STRINGFLAG` environment variable.
 
 ```go
 import (

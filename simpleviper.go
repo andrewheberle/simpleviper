@@ -18,7 +18,9 @@ type Viperlet struct {
 	allowMissingConfig bool
 }
 
-// New returns an initialised Viperlet instance
+// New returns an initialised Viperlet instance. The behaviour of the returned *Viperlet can be alted by passing various Option's.
+//
+// Creating a new Viperlet with no options is valid but it does not provide any specific features without manually using the underlying *viper.Viper instance via the Viper method.
 func New(opts ...Option) *Viperlet {
 	v := new(Viperlet)
 
@@ -35,12 +37,12 @@ func New(opts ...Option) *Viperlet {
 	return v
 }
 
-// Viper provides access to the underlying viper.Viper instance
+// Viper provides access to the underlying *viper.Viper instance
 func (v *Viperlet) Viper() *viper.Viper {
 	return v.viper
 }
 
-// Init binds flags and env vars to the underlying viper.Viper instance
+// Init binds flags and env vars to the underlying *viper.Viper instance
 func (v *Viperlet) Init(flagset *pflag.FlagSet) error {
 	// bind flagset to viper instance
 	if err := v.viper.BindPFlags(flagset); err != nil {
