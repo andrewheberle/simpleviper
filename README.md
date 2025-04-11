@@ -76,7 +76,7 @@ func main() {
 }
 ```
 
-## Default Values, Flags, Environment and Configration
+## Defaults, Flags, Environment and Configuration
 
 The precendece for a value is unchanged from [viper](https://github.com/spf13/viper), which is as follows where each item takes precedence over the item below it:
 
