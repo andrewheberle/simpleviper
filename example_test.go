@@ -50,7 +50,7 @@ func ExampleViperlet_Init() {
 }
 
 // This example demonstrates attempting to load a config file that is missing and is treated as a fatal error.
-func ExampleViperlet_Init_missingConfigFile() {
+func ExampleViperlet_Init_missing_config_file() {
 	var exampleVar string
 
 	// create flagset, which in a real program (not an example) would use pflag.ExitOnError
@@ -71,7 +71,7 @@ func ExampleViperlet_Init_missingConfigFile() {
 }
 
 // This example demonstrates specifying a config file that is optional, so that a missing file is not an error.
-func ExampleViperlet_Init_optionalConfigFile() {
+func ExampleViperlet_Init_optional_config_file() {
 	var exampleVar string
 
 	// create flagset, which in a real program (not an example) would use pflag.ExitOnError
