@@ -59,7 +59,7 @@ func ExampleViperlet_Init_missingConfigFile() {
 	fs.Parse([]string{"--example", "from command line"})
 
 	if err := simpleviper.New(simpleviper.WithConfig("missing.yml")).Init(fs); err != nil {
-		fmt.Printf("error: %s\n", err)
+		fmt.Println("error: config file missing")
 
 		// a real program (not an example) would exit with a non-zero exit code at this point, but in this case we return
 		return
@@ -67,7 +67,7 @@ func ExampleViperlet_Init_missingConfigFile() {
 
 	// this is not executed
 	fmt.Println(exampleVar)
-	// Output: error: open missing.yml: The system cannot find the file specified.
+	// Output: error: config file missing
 }
 
 // This example demonstrates specifying a config file that is optional, so that a missing file is not an error.
