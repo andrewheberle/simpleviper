@@ -2,6 +2,7 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/andrewheberle/simpleviper)](https://goreportcard.com/report/github.com/andrewheberle/simpleviper)
 [![GoDoc](https://godoc.org/github.com/andrewheberle/simpleviper?status.svg)](https://godoc.org/github.com/andrewheberle/simpleviper)
+[![codecov](https://codecov.io/gh/andrewheberle/simpleviper/graph/badge.svg?token=JEFWB2U0GY)](https://codecov.io/gh/andrewheberle/simpleviper)
 
 This module is a convenience wrapper around [viper](https://github.com/spf13/viper) to avoid repeated boilerplate code in my own projects when integrating Viper with [cobra](https://github.com/spf13/cobra) or [simplecobra](https://github.com/bep/simplecobra) and [pflag](https://github.com/spf13/pflag).
 
