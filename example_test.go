@@ -31,7 +31,7 @@ func ExampleViperlet_Init() {
 	os.Setenv("EXAMPLE2", "from env var as flag is not set")
 	os.Setenv("EXAMPLE3", "env var overrides config file")
 
-	simpleviper.New(simpleviper.WithEnv(), simpleviper.WithConfig("example.yml")).Init(fs)
+	_ = simpleviper.New(simpleviper.WithEnv(), simpleviper.WithConfig("example.yml")).Init(fs)
 
 	fmt.Println(example1)
 	fmt.Println(example2)
@@ -46,4 +46,42 @@ func ExampleViperlet_Init() {
 	// from config file
 	// from default value
 	// will override config file
+}
+
+func ExampleViperlet_Init_missingconfig() {
+	var exampleVar string
+
+	// create flagset, which in a real program (not an example) would use pflag.ExitOnError
+	fs := pflag.NewFlagSet("example", pflag.ContinueOnError)
+	fs.StringVar(&exampleVar, "example", "", "Example flag")
+	fs.Parse([]string{"--example", "from command line"})
+
+	if err := simpleviper.New(simpleviper.WithConfig("missing.yml")).Init(fs); err != nil {
+		fmt.Printf("error: %s\n", err)
+
+		// a real program (not an example) would exit with a non-zero exit code at this point, but in this case we return
+		return
+	}
+
+	fmt.Println(exampleVar)
+	// Output: error: open missing.yml: The system cannot find the file specified.
+}
+
+func ExampleViperlet_Init_optionalconfig() {
+	var exampleVar string
+
+	// create flagset, which in a real program (not an example) would use pflag.ExitOnError
+	fs := pflag.NewFlagSet("example", pflag.ContinueOnError)
+	fs.StringVar(&exampleVar, "example", "", "Example flag")
+	fs.Parse([]string{"--example", "from command line"})
+
+	if err := simpleviper.New(simpleviper.WithOptionalConfig("missing.yml")).Init(fs); err != nil {
+		fmt.Printf("error: %s\n", err)
+
+		// a real program (not an example) would exit with a non-zero exit code at this point, but in this case we return
+		return
+	}
+
+	fmt.Println(exampleVar)
+	// Output: from command line
 }

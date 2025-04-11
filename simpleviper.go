@@ -3,6 +3,7 @@ package simpleviper
 
 import (
 	"errors"
+	"os"
 	"strings"
 
 	"github.com/spf13/pflag"
@@ -53,7 +54,6 @@ func (v *Viperlet) Viper() *viper.Viper {
 
 // Init binds the provided [*pflag.FlagSet] and env vars to the underlying [*viper.Viper] instance
 func (v *Viperlet) Init(flagset *pflag.FlagSet) error {
-	// with no flagset, do nothing
 	if flagset != nil {
 		// bind *pflag.FlagSet to *viper.Viper instance
 		if err := v.Viper().BindPFlags(flagset); err != nil {
@@ -78,21 +78,21 @@ func (v *Viperlet) Init(flagset *pflag.FlagSet) error {
 	if v.configFile != "" {
 		v.Viper().SetConfigFile(v.configFile)
 		if err := v.Viper().ReadInConfig(); err != nil {
-			if v.allowMissingConfig {
-				// check if error was not a viper.ConfigFileNotFoundError
-				if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-					// error was something else so return it
-					return err
-				}
-			} else {
-				// missing config not allowed
+			// return all errors if allowMissingConfig is not true
+			if !v.allowMissingConfig {
+				return err
+			}
+
+			// otherwise only return error if it is NOT a viper.ConfigFileNotFoundError error
+			if !errors.Is(err, viper.ConfigFileNotFoundError{}) && !errors.Is(err, os.ErrNotExist) {
+				// error was something else so return it
 				return err
 			}
 		}
 	}
 
 	// set any values from viper as flags once other steps are done
-	defer flagset.VisitAll(func(f *pflag.Flag) {
+	flagset.VisitAll(func(f *pflag.Flag) {
 		if v.Viper().IsSet(f.Name) && v.Viper().GetString(f.Name) != "" {
 			flagset.Set(f.Name, v.Viper().GetString(f.Name))
 		}
