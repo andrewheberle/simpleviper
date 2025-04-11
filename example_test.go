@@ -63,6 +63,7 @@ func ExampleViperlet_Init_missingConfigFile() {
 		return
 	}
 
+	// this is not executed
 	fmt.Println(exampleVar)
 	// Output: error: open missing.yml: The system cannot find the file specified.
 }

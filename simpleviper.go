@@ -110,14 +110,14 @@ func WithViper(viper *viper.Viper) Option {
 	}
 }
 
-// WithEnv enables env var binding. See [viper.AutomaticEnv] for details.
+// WithEnv enables environment variable binding. See [viper.AutomaticEnv] for details.
 func WithEnv() Option {
 	return func(v *Viperlet) {
 		v.bindEnv = true
 	}
 }
 
-// WithEnvPrefix enables env var binding using the provided prefix. See [viper.SetEnvPrefix] for details.
+// WithEnvPrefix enables environment variable binding using the provided prefix. See [viper.SetEnvPrefix] for details.
 func WithEnvPrefix(prefix string) Option {
 	return func(v *Viperlet) {
 		v.bindEnv = true
@@ -125,7 +125,7 @@ func WithEnvPrefix(prefix string) Option {
 	}
 }
 
-// WithEnvKeyReplacer uses the provided replacer for env var names. See [viper.SetEnvKeyReplacer] for details.
+// WithEnvKeyReplacer uses the provided [*strings.Replacer] for environment variable names. See [viper.SetEnvKeyReplacer] for details.
 func WithEnvKeyReplacer(replacer *strings.Replacer) Option {
 	return func(v *Viperlet) {
 		v.bindEnv = true
