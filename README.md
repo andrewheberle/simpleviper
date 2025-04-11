@@ -5,7 +5,7 @@
 
 This module is a convenience wrapper around [viper](https://github.com/spf13/viper) to avoid repeated boilerplate code in my own projects when integrating Viper with [cobra](https://github.com/spf13/cobra) or [simplecobra](https://github.com/bep/simplecobra) and [pflag](https://github.com/spf13/pflag).
 
-This provides a `Viperlet` type that is created using the `New` function, whch by using the `Init` method will bind a `*pflag.Flagset` to the underlying `*viper.Viper` instance, while also optionally loading a configuration file and retrieving values from the environment.
+This provides a `Viperlet` type that is created using the `New` function, which by using the `Init` method will bind a `*pflag.Flagset` to the underlying `*viper.Viper` instance, while also optionally loading a configuration file and retrieving values from the environment.
 
 The following example shows the integration with [simplecobra](https://github.com/bep/simplecobra) and allows the value of the `--stringflag` command line option to be set using the `STRINGFLAG` environment variable.
 
