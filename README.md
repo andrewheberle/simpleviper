@@ -3,11 +3,11 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/andrewheberle/simpleviper)](https://goreportcard.com/report/github.com/andrewheberle/simpleviper)
 [![GoDoc](https://godoc.org/github.com/andrewheberle/simpleviper?status.svg)](https://godoc.org/github.com/andrewheberle/simpleviper)
 
-This module is a convenience wrapper around [Viper](https://github.com/spf13/viper) to avoid repeated boilerplate code in my own projects when integrating Viper with [Cobra](https://github.com/spf13/cobra) or [Simplecobra](https://github.com/bep/simplecobra) and [Pflag](https://github.com/spf13/pflag).
+This module is a convenience wrapper around [viper](https://github.com/spf13/viper) to avoid repeated boilerplate code in my own projects when integrating Viper with [cobra](https://github.com/spf13/cobra) or [simplecobra](https://github.com/bep/simplecobra) and [pflag](https://github.com/spf13/pflag).
 
 This provides a `Viperlet` type that is created using the `New` function, whch by using the `Init` method will bind a `*pflag.Flagset` to the underlying `*viper.Viper` instance, while also optionally loading a configuration file and retrieving values from the environment.
 
-The following example shows the integration with Simplecobra and allows the value of the `--stringflag` command line option to be set using the `STRINGFLAG` environment variable.
+The following example shows the integration with [simplecobra](https://github.com/bep/simplecobra) and allows the value of the `--stringflag` command line option to be set using the `STRINGFLAG` environment variable.
 
 ```go
 import (
@@ -77,13 +77,13 @@ func main() {
 
 ## Default Values, Flags, Environment and Configration
 
-The precendece for a value is unchanged from Viper, which is as follows where each item takes precedence over the item below it:
+The precendece for a value is unchanged from [viper](https://github.com/spf13/viper), which is as follows where each item takes precedence over the item below it:
 
 * flag
 * env
 * config
 * default
 
-## Using Viper
+## Using Viper Directly
 
-The underlying `*viper.Viper` is exposed using the `Viper` method, so you are not restrictd to just the features this module provides.
+The underlying `*viper.Viper` is exposed using the `Viper` method, so you are not restricted to just the features this module provides.

@@ -1,3 +1,4 @@
 ---
 example3: env var will take precedence
 example4: from config file
+example6: command line will take precedence

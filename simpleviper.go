@@ -1,12 +1,22 @@
+// Package simpleviper a convenience wrapper around [viper] to avoid repeated boilerplate code in my own projects when integrating [viper] with [cobra] or [github.com/bep/simplecobra] and [pflag].
 package simpleviper
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
+// Errors returned by Init
+var (
+	ErrInvalidFlagset = errors.New("invalid flagset")
+)
+
+// A Viperlet is used to bind flags with env vars based on the options provided to New.
+//
+// Although it is safe to use an unitialised Viperlet, it is equivalent to calling New without any options, so it's usefulness is limited.
 type Viperlet struct {
 	viper *viper.Viper
 
@@ -20,7 +30,7 @@ type Viperlet struct {
 
 // New returns an initialised Viperlet instance. The behaviour of the returned *Viperlet can be alted by passing various Option's.
 //
-// Creating a new Viperlet with no options is valid but it does not provide any specific features without manually using the underlying *viper.Viper instance via the Viper method.
+// Creating a new Viperlet with no options is valid but it does not provide any specific features without manually using the underlying [*viper.Viper] instance via the Viper method.
 func New(opts ...Option) *Viperlet {
 	v := new(Viperlet)
 
@@ -29,43 +39,45 @@ func New(opts ...Option) *Viperlet {
 		o(v)
 	}
 
-	// set up new viper if not passed
+	return v
+}
+
+// Viper provides access to the underlying [*viper.Viper] instance
+func (v *Viperlet) Viper() *viper.Viper {
 	if v.viper == nil {
 		v.viper = viper.New()
 	}
 
-	return v
-}
-
-// Viper provides access to the underlying *viper.Viper instance
-func (v *Viperlet) Viper() *viper.Viper {
 	return v.viper
 }
 
-// Init binds flags and env vars to the underlying *viper.Viper instance
+// Init binds the provided [*pflag.FlagSet] and env vars to the underlying [*viper.Viper] instance
 func (v *Viperlet) Init(flagset *pflag.FlagSet) error {
-	// bind flagset to viper instance
-	if err := v.viper.BindPFlags(flagset); err != nil {
-		return err
+	// with no flagset, do nothing
+	if flagset != nil {
+		// bind *pflag.FlagSet to *viper.Viper instance
+		if err := v.Viper().BindPFlags(flagset); err != nil {
+			return err
+		}
 	}
 
 	// bind to env
 	if v.bindEnv {
 		if v.envPrefix != "" {
-			v.viper.SetEnvPrefix(v.envPrefix)
+			v.Viper().SetEnvPrefix(v.envPrefix)
 		}
 
 		if v.envKeyReplacer != nil {
-			v.viper.SetEnvKeyReplacer(v.envKeyReplacer)
+			v.Viper().SetEnvKeyReplacer(v.envKeyReplacer)
 		}
 
-		v.viper.AutomaticEnv()
+		v.Viper().AutomaticEnv()
 	}
 
 	// read in config if specified
 	if v.configFile != "" {
-		v.viper.SetConfigFile(v.configFile)
-		if err := v.viper.ReadInConfig(); err != nil {
+		v.Viper().SetConfigFile(v.configFile)
+		if err := v.Viper().ReadInConfig(); err != nil {
 			if v.allowMissingConfig {
 				// check if error was not a viper.ConfigFileNotFoundError
 				if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
@@ -79,10 +91,10 @@ func (v *Viperlet) Init(flagset *pflag.FlagSet) error {
 		}
 	}
 
-	// set any values from viper as flags
-	flagset.VisitAll(func(f *pflag.Flag) {
-		if v.viper.IsSet(f.Name) && v.viper.GetString(f.Name) != "" {
-			flagset.Set(f.Name, v.viper.GetString(f.Name))
+	// set any values from viper as flags once other steps are done
+	defer flagset.VisitAll(func(f *pflag.Flag) {
+		if v.Viper().IsSet(f.Name) && v.Viper().GetString(f.Name) != "" {
+			flagset.Set(f.Name, v.Viper().GetString(f.Name))
 		}
 	})
 
@@ -91,21 +103,21 @@ func (v *Viperlet) Init(flagset *pflag.FlagSet) error {
 
 type Option func(*Viperlet)
 
-// WithViper allows passing your own viper.Viper instance
+// WithViper allows passing your own [*viper.Viper] instance
 func WithViper(viper *viper.Viper) Option {
 	return func(v *Viperlet) {
 		v.viper = viper
 	}
 }
 
-// WithEnv enables env var binding. See viper.AutomaticEnv for details.
+// WithEnv enables env var binding. See [viper.AutomaticEnv] for details.
 func WithEnv() Option {
 	return func(v *Viperlet) {
 		v.bindEnv = true
 	}
 }
 
-// WithEnvPrefix enables env var binding using the provided prefix. See viper.SetEnvPrefix for details.
+// WithEnvPrefix enables env var binding using the provided prefix. See [viper.SetEnvPrefix] for details.
 func WithEnvPrefix(prefix string) Option {
 	return func(v *Viperlet) {
 		v.bindEnv = true
@@ -113,7 +125,7 @@ func WithEnvPrefix(prefix string) Option {
 	}
 }
 
-// WithEnvKeyReplacer uses the provided replacer for env var names. See viper.SetEnvKeyReplacer for details.
+// WithEnvKeyReplacer uses the provided replacer for env var names. See [viper.SetEnvKeyReplacer] for details.
 func WithEnvKeyReplacer(replacer *strings.Replacer) Option {
 	return func(v *Viperlet) {
 		v.bindEnv = true
