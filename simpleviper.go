@@ -61,10 +61,10 @@ func (v *Viperlet) Viper() *viper.Viper {
 }
 
 // Init binds the provided [*pflag.FlagSet] and env vars to the underlying [*viper.Viper] instance
-func (v *Viperlet) Init(flagset *pflag.FlagSet) error {
-	if flagset != nil {
+func (v *Viperlet) Init(flagset ...*pflag.FlagSet) error {
+	for _, fs := range flagset {
 		// bind *pflag.FlagSet to *viper.Viper instance
-		if err := v.Viper().BindPFlags(flagset); err != nil {
+		if err := v.Viper().BindPFlags(fs); err != nil {
 			return err
 		}
 	}
@@ -100,11 +100,13 @@ func (v *Viperlet) Init(flagset *pflag.FlagSet) error {
 	}
 
 	// set any values from viper as flags once other steps are done
-	flagset.VisitAll(func(f *pflag.Flag) {
-		if v.Viper().IsSet(f.Name) && v.Viper().GetString(f.Name) != "" {
-			flagset.Set(f.Name, v.Viper().GetString(f.Name))
-		}
-	})
+	for _, fs := range flagset {
+		fs.VisitAll(func(f *pflag.Flag) {
+			if v.Viper().IsSet(f.Name) && v.Viper().GetString(f.Name) != "" {
+				fs.Set(f.Name, v.Viper().GetString(f.Name))
+			}
+		})
+	}
 
 	return nil
 }
