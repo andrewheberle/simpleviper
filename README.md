@@ -49,7 +49,7 @@ func (c *rootCommand) Init(cd *simplecobra.Commandeer) error {
 func (c *rootCommand) PreRun(this, runner *simplecobra.Commandeer) error {
 	cmd := this.CobraCommand
 
-    return viperlet.New(WithEnv()).Init(cmd.Flags())
+    return simpleviper.New(WithEnv()).Init(cmd.Flags())
 }
 
 func (c *rootCommand) Run(ctx context.Context, cd *simplecobra.Commandeer, args []string) error {
