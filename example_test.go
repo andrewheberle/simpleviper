@@ -32,6 +32,9 @@ func ExampleViperlet_Init() {
 	os.Setenv("EXAMPLE1", "flag will take precedence")
 	os.Setenv("EXAMPLE2", "from env var as flag is not set")
 	os.Setenv("EXAMPLE3", "env var overrides config file")
+	defer os.Unsetenv("EXAMPLE1")
+	defer os.Unsetenv("EXAMPLE2")
+	defer os.Unsetenv("EXAMPLE3")
 
 	_ = simpleviper.New(simpleviper.WithEnv(), simpleviper.WithConfig("example.yml")).Init(fs)
 
@@ -91,7 +94,8 @@ func ExampleViperlet_Init_optionalConfigFile() {
 	// Output: from command line
 }
 
-// This example demonstrates values coming from the command line, defaults and environment variables with an EnvKeyReplacer set.
+// This example demonstrates values coming from the command line, defaults and environment
+// variables with an EnvKeyReplacer set.
 func ExampleViperlet_Init_withEnvKeyReplacer() {
 	var example1, example2, example3 string
 
@@ -108,8 +112,71 @@ func ExampleViperlet_Init_withEnvKeyReplacer() {
 
 	// set some env vars
 	os.Setenv("EXAMPLE2_FLAG", "from env var")
+	defer os.Unsetenv("EXAMPLE2_FLAG")
 
 	_ = simpleviper.New(simpleviper.WithEnv(), simpleviper.WithEnvKeyReplacer(strings.NewReplacer(".", "_"))).Init(fs)
+
+	fmt.Println(example1)
+	fmt.Println(example2)
+	fmt.Println(example3)
+	// Output:
+	// with default
+	// from env var
+	// from command line
+}
+
+// This example demonstrates values coming from the command line, defaults and environment
+// variables with an EnvPrefix set.
+func ExampleViperlet_Init_withEnvPrefix() {
+	var example1, example2, example3 string
+
+	// create flagset, which in a real program (not an example) would use pflag.ExitOnError
+	fs := pflag.NewFlagSet("example", pflag.ContinueOnError)
+	fs.StringVar(&example1, "example1", "with default", "Example flag 1")
+	fs.StringVar(&example2, "example2", "overridden by env", "Example flag 2")
+	fs.StringVar(&example3, "example3", "overridden by command line", "Example flag 3")
+
+	// as this is an example the command line options are provided
+	fs.Parse([]string{
+		"--example3", "from command line",
+	})
+
+	// set some env vars
+	os.Setenv("CMD_EXAMPLE2", "from env var")
+	defer os.Unsetenv("CMD_EXAMPLE2")
+
+	_ = simpleviper.New(simpleviper.WithEnv(), simpleviper.WithEnvPrefix("cmd")).Init(fs)
+
+	fmt.Println(example1)
+	fmt.Println(example2)
+	fmt.Println(example3)
+	// Output:
+	// with default
+	// from env var
+	// from command line
+}
+
+// This example demonstrates values coming from the command line, defaults and environment
+// variables with an EnvPrefix set.
+func ExampleViperlet_Init_withEnvPrefixwithEnvKeyReplacer() {
+	var example1, example2, example3 string
+
+	// create flagset, which in a real program (not an example) would use pflag.ExitOnError
+	fs := pflag.NewFlagSet("example", pflag.ContinueOnError)
+	fs.StringVar(&example1, "example1.flag", "with default", "Example flag 1")
+	fs.StringVar(&example2, "example2.flag", "overridden by env", "Example flag 2")
+	fs.StringVar(&example3, "example3.flag", "overridden by command line", "Example flag 3")
+
+	// as this is an example the command line options are provided
+	fs.Parse([]string{
+		"--example3.flag", "from command line",
+	})
+
+	// set some env vars
+	os.Setenv("CMD_EXAMPLE2_FLAG", "from env var")
+	defer os.Unsetenv("CMD_EXAMPLE2_FLAG")
+
+	_ = simpleviper.New(simpleviper.WithEnvPrefix("cmd"), simpleviper.WithEnvKeyReplacer(strings.NewReplacer(".", "_"))).Init(fs)
 
 	fmt.Println(example1)
 	fmt.Println(example2)
