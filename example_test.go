@@ -3,6 +3,7 @@ package simpleviper_test
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/andrewheberle/simpleviper"
 	"github.com/spf13/pflag"
@@ -88,4 +89,33 @@ func ExampleViperlet_Init_optionalConfigFile() {
 
 	fmt.Println(exampleVar)
 	// Output: from command line
+}
+
+// This example demonstrates values coming from the command line, defaults and environment variables with an EnvKeyReplacer set.
+func ExampleViperlet_Init_withEnvKeyReplacer() {
+	var example1, example2, example3 string
+
+	// create flagset, which in a real program (not an example) would use pflag.ExitOnError
+	fs := pflag.NewFlagSet("example", pflag.ContinueOnError)
+	fs.StringVar(&example1, "example1.flag", "with default", "Example flag 1")
+	fs.StringVar(&example2, "example2.flag", "overridden by env", "Example flag 2")
+	fs.StringVar(&example3, "example3.flag", "overridden by command line", "Example flag 3")
+
+	// as this is an example the command line options are provided
+	fs.Parse([]string{
+		"--example3.flag", "from command line",
+	})
+
+	// set some env vars
+	os.Setenv("EXAMPLE2_FLAG", "from env var")
+
+	_ = simpleviper.New(simpleviper.WithEnv(), simpleviper.WithEnvKeyReplacer(strings.NewReplacer(".", "_"))).Init(fs)
+
+	fmt.Println(example1)
+	fmt.Println(example2)
+	fmt.Println(example3)
+	// Output:
+	// with default
+	// from env var
+	// from command line
 }
